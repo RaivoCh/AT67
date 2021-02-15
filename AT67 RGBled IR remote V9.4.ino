@@ -1,7 +1,7 @@
-/*AT67 RGBled IR remote V10.0*/
-//začínám znovu
-//nejprve namapovat IR remote a potvrdit v SerilaMonitor - namapováno
-
+/*AT67 RGBled IR remote V9.4*/
+//přidání regulace jasu
+//regulace jasu nefunguje, osekám kód na míň barev
+//změna pořadí vykonávání příkazů
 
 
 /*IR remote*/
@@ -42,11 +42,65 @@ void setup()    {
 
 void loop()
 //R remote
-
+//tlačítka namapována správně
     {
     while (IR.decode (& cmd) == 0)    {
     }
    
+   //zde začíná část s nastavováním RGB led
+//nejprve nastavím mezní hodnoty
+
+
+if (Rval > 255)    {
+    Rval = 255;
+    }
+if (Rval < 0)    {
+    Rval = 0;
+    }
+
+if (Gval > 255)    {
+    Gval = 255;
+    }
+ if (Gval < 0)    {
+    Gval = 0;
+    }
+
+if (Bval > 255)    {
+    Bval = 255;
+    }
+ if (Bval < 0)    {
+    Bval = 0;
+    }
+
+//koeficient jasu
+IR.resume();
+if (myCom == "up") {
+   brightC = (round(brightC + step));
+
+   if (brightC > 100)    {
+    brightC  = 100;
+   }
+  
+     
+}
+
+if (myCom == "down") {
+   brightC = (round(brightC - step));
+
+   if (brightC < 0)    {
+    brightC = 0;
+   }
+
+
+    
+} 
+
+       //toto je nově nastaveno a přesunuto
+    analogWrite(redPin, (Rval * brightC / 100));
+    analogWrite(greenPin, (Gval * brightC / 100));
+    analogWrite(bluePin, (Bval * brightC / 100));
+
+   // Serial.println(cmd.value, HEX);
     delay(dt);
     IR.resume(); 
 
@@ -133,37 +187,74 @@ void loop()
     if (cmd.value==0xFF52AD)    {    
         myCom="nine";
     }
+//až sem to funguje
 
-    Serial.print(myCom);
 
-//následuje kontrola jasu
-    if (myCom == "up") {
-   brightC = (round(brightC + step));
 
-   if (brightC > 100)    {
-    brightC  = 100;
-   }
 
-   }
+//tady nastavím barvy
+//rozsvítit naplno
+if (myCom == "pwr") {
+    
+    brightC = 100;
 
-   if (myCom == "down") {
-   brightC = (round(brightC - step));
+    Rval = (255 * brightC / 100);
+    Gval = (255 * brightC / 100);
+    Bval = (255 * brightC / 100);
 
-   if (brightC < 0)    {
-    brightC = 0;
-   }
-   
-   }
+    analogWrite(redPin, Rval);
+    analogWrite(greenPin, Gval);
+    analogWrite(bluePin, Bval);
+}
 
-    Serial.print(" brightC");
-    Serial.println(brightC);
+//white
+if (myCom == "zero") {
+    Rval = (255 * brightC / 100);
+    Gval = (255 * brightC / 100);
+    Bval = (255 * brightC / 100);
 
-//teď zkusím LED
-//nejprve rozsvítit
-if (myCom == "pwr")    {
-    analogWrite(redPin, 255 * brightC);
-    analogWrite(greenPin, 255 * brightC);
-    analogWrite(bluePin, 255 * brightC);
-}    
+    analogWrite(redPin, Rval);
+    analogWrite(greenPin, Gval);
+    analogWrite(bluePin, Bval);
+}   
 
-}    
+//red max
+if (myCom == "one") {
+    Rval = (255 * brightC / 100);
+    Gval = (0 * brightC / 100);
+    Bval = (0 * brightC / 100);
+
+    analogWrite(redPin, Rval);
+    analogWrite(greenPin, Gval);
+    analogWrite(bluePin, Bval);
+}  
+
+//vypnout
+if (myCom == "func/stop") {
+    Rval = (0 * brightC / 100);
+    Gval = (0 * brightC / 100);
+    Bval = (0 * brightC / 100);
+
+    analogWrite(redPin, Rval);
+    analogWrite(greenPin, Gval);
+    analogWrite(bluePin, Bval);
+}  
+
+//v tomto je někde chyba
+
+Serial.print(myCom);
+Serial.print(" R");
+Serial.print(Rval);
+Serial.print(" G");
+Serial.print(Gval);
+Serial.print(" B");
+Serial.print(Bval);
+Serial.print(" brightC ");
+Serial.println(brightC);
+
+
+
+
+//V9.3
+
+    }    
