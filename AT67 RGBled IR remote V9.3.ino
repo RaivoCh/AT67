@@ -239,6 +239,8 @@ if (myCom == "func/stop") {
     analogWrite(bluePin, Bval);
 }  
 
+//v tomto je někde chyba
+
 Serial.print(myCom);
 Serial.print(" R");
 Serial.print(Rval);
@@ -248,6 +250,9 @@ Serial.print(" B");
 Serial.print(Bval);
 Serial.print(" brightC ");
 Serial.println(brightC);
+
+
+
 
 //V9.3
 
