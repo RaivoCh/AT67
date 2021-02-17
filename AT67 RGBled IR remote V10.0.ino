@@ -134,8 +134,7 @@ void loop()
         myCom="nine";
     }
 
-    Serial.print(myCom);
-
+    
 //následuje kontrola jasu
     if (myCom == "up") {
    brightC = (round(brightC + step));
@@ -155,15 +154,55 @@ void loop()
    
    }
 
-    Serial.print(" brightC");
-    Serial.println(brightC);
-
 //teď zkusím LED
 //nejprve rozsvítit
 if (myCom == "pwr")    {
-    analogWrite(redPin, 255 * brightC);
-    analogWrite(greenPin, 255 * brightC);
-    analogWrite(bluePin, 255 * brightC);
+
+   brightC = 100;
+
+   Rval = (255 * brightC / 100);
+   Gval = (255 * brightC / 100);
+   Bval = (255 * brightC / 100);
 }    
 
+// zhasnout
+if (myCom == "func/stop")    {
+    Rval = 0;
+    Gval = 0;
+    Bval = 0;
+}
+
+//bílá
+if (myCom == "zero")    {
+    Rval = (255 * brightC / 100);
+    Gval = (255 * brightC / 100);
+    Bval = (255 * brightC / 100);
+}
+
+//červená
+if (myCom == "one")    {
+    Rval = (255 * brightC / 100);
+    Gval = (0 * brightC / 100);
+    Bval = (0 * brightC / 100);
+}
+
+
+
+//toto by mělo být až úplně na konci
+    analogWrite(redPin, Rval);
+    analogWrite(greenPin, Gval);
+    analogWrite(bluePin, Bval);
+
+    Serial.print(myCom);
+    Serial.print(" R");
+    Serial.print(Rval);
+    Serial.print(" G");
+    Serial.print(Gval);
+    Serial.print(" B");
+    Serial.print(Bval);
+    Serial.print(" brightC ");
+    Serial.println(brightC);
+
 }    
+
+// V10.0

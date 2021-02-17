@@ -24,9 +24,9 @@ int Bval;
 
 
 int step = 25; // o kolik se bude měnit jas při zmáčknutí tlačítka up down
-int brightC = 100; //koeficient jasu, musí být vyplněn, 100 dává velké hodnoty o dva řády vyšší než max
+int brightC = 100; //koeficient jasu 100%, musí být vyplněn, 100 dává velké hodnoty o dva řády vyšší než max
 
-int dt = 100; //delay
+int dt = 500; //delay
 
 
 void setup()    {
@@ -48,8 +48,30 @@ void loop()
     }
    
    //zde začíná část s nastavováním RGB led
-//nejprve nastavím mezní hodnoty
 
+
+//koeficient jasu
+IR.resume();
+if (myCom == "up") {
+   brightC = (round(brightC + step));
+
+   if (brightC > 100)    {
+    brightC  = 100;
+   }
+  
+     
+}
+
+if (myCom == "down") {
+   brightC = (round(brightC - step));
+
+   if (brightC < 0)    {
+    brightC = 0;
+   }
+   
+} 
+
+//nejprve nastavím mezní hodnoty
 
 if (Rval > 255)    {
     Rval = 255;
@@ -72,33 +94,14 @@ if (Bval > 255)    {
     Bval = 0;
     }
 
-//koeficient jasu
-IR.resume();
-if (myCom == "up") {
-   brightC = (round(brightC + step));
-
-   if (brightC > 100)    {
-    brightC  = 100;
-   }
-  
-     
-}
-
-if (myCom == "down") {
-   brightC = (round(brightC - step));
-
-   if (brightC < 0)    {
-    brightC = 0;
-   }
-
-
-    
-} 
 
        //toto je nově nastaveno a přesunuto
+       //teď jsem zjistil chybu, tohle tu je dvakrát
+    
     analogWrite(redPin, (Rval * brightC / 100));
     analogWrite(greenPin, (Gval * brightC / 100));
     analogWrite(bluePin, (Bval * brightC / 100));
+    
 
    // Serial.println(cmd.value, HEX);
     delay(dt);
@@ -187,7 +190,7 @@ if (myCom == "down") {
     if (cmd.value==0xFF52AD)    {    
         myCom="nine";
     }
-//až sem to funguje
+//až sem to funguje, schováno pro přehlednost
 
 
 
@@ -202,9 +205,9 @@ if (myCom == "pwr") {
     Gval = (255 * brightC / 100);
     Bval = (255 * brightC / 100);
 
-    analogWrite(redPin, Rval);
+   /* analogWrite(redPin, Rval);
     analogWrite(greenPin, Gval);
-    analogWrite(bluePin, Bval);
+    analogWrite(bluePin, Bval);*/
 }
 
 //white
@@ -213,9 +216,9 @@ if (myCom == "zero") {
     Gval = (255 * brightC / 100);
     Bval = (255 * brightC / 100);
 
-    analogWrite(redPin, Rval);
+  /*  analogWrite(redPin, Rval);
     analogWrite(greenPin, Gval);
-    analogWrite(bluePin, Bval);
+    analogWrite(bluePin, Bval);*/
 }   
 
 //red max
@@ -224,9 +227,9 @@ if (myCom == "one") {
     Gval = (0 * brightC / 100);
     Bval = (0 * brightC / 100);
 
-    analogWrite(redPin, Rval);
+  /*  analogWrite(redPin, Rval);
     analogWrite(greenPin, Gval);
-    analogWrite(bluePin, Bval);
+    analogWrite(bluePin, Bval);*/
 }  
 
 //vypnout
@@ -235,9 +238,9 @@ if (myCom == "func/stop") {
     Gval = (0 * brightC / 100);
     Bval = (0 * brightC / 100);
 
-    analogWrite(redPin, Rval);
+/*    analogWrite(redPin, Rval);
     analogWrite(greenPin, Gval);
-    analogWrite(bluePin, Bval);
+    analogWrite(bluePin, Bval);*/
 }  
 
 //v tomto je někde chyba
@@ -255,6 +258,6 @@ Serial.println(brightC);
 
 
 
-//V9.3
+//V9.4
 
     }    
