@@ -26,7 +26,7 @@ int Bval;
 int step = 25; // o kolik se bude měnit jas při zmáčknutí tlačítka up down
 int brightC = 100; //koeficient jasu, musí být vyplněn, 100 dává velké hodnoty o dva řády vyšší než max
 
-int dt = 100; //delay
+int dt = 500; //delay
 
 
 void setup()    {
@@ -48,7 +48,7 @@ void loop()
     }
    
     delay(dt);
-    IR.resume(); 
+   // IR.resume(); zkusím přesunout na konec, test obou variant
 
     if (cmd.value==0xFFA25D)    {    //hodnotu FFA25D jsme vyčetli dříve, že je přiřazena tlačítku power
         myCom="pwr";        
@@ -186,7 +186,7 @@ if (myCom == "one")    {
     Bval = (0 * brightC / 100);
 }
 
-
+IR.resume();
 
 //toto by mělo být až úplně na konci
     analogWrite(redPin, Rval);
